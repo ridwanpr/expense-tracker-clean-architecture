@@ -9,6 +9,9 @@
     "start": "node dist/main.js",
     "build": "rimraf dist && tsc",
     "test": "vitest",
+    "test:unit": "vitest service",
+    "db:test:push": "dotenv -e .env.test -- prisma db push --accept-data-loss",
+    "test:e2e": "pnpm run db:test:push && dotenv -e .env.test -- vitest integration",
     "test:watch": "vitest --watch"
   },
   "keywords": [],

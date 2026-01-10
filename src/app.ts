@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(trimMiddleware);
 
-app.use(authRoutes);
+app.use("/api", authRoutes);
 
 app.use((_req, res, _next) => {
   res.status(404).json({

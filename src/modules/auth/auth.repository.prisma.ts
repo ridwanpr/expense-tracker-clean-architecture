@@ -5,12 +5,19 @@ import type { RegisterUserDTO } from "./auth.schema.js";
 export class PrismaAuthRepository implements AuthRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async findByUsername(username: string): Promise<{ id: number } | null> {
+  async findByUsername(
+    username: string
+  ): Promise<{
+    id: number;
+    name: string;
+    username: string;
+    password: string;
+  } | null> {
     return await this.prisma.user.findFirst({
       where: {
         username: username,
       },
-      select: { id: true },
+      select: { id: true, name: true, username: true, password: true },
     });
   }
 
