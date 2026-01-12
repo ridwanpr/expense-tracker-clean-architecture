@@ -60,4 +60,22 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  async refreshUserToken(refreshToken: string) {
+    const { payload } = await this.tokenService.verifyJWT(refreshToken);
+    const userId = Number(payload.userId);
+    const user = await this.repo.findUserById(userId);
+    if (!user) {
+      throw new ResponseError(400, "User not Found");
+    }
+
+    const newAccessToken = await this.tokenService.generateAccessToken({
+      userId: user.id.toString(),
+    });
+
+    return {
+      accessToken: newAccessToken,
+      user,
+    };
+  }
 }

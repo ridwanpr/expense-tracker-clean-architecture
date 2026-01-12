@@ -59,7 +59,7 @@ describe("POST /api/auth/register", () => {
     const response = await request(app)
       .post("/api/auth/register")
       .send({ username: "test", password: "123", name: "test" });
-      
+
     expect(response.status).toBe(400);
   });
 
@@ -155,5 +155,70 @@ describe("POST /api/auth/login", () => {
     if (response.body.data) {
       expect(response.body.data.username).toBe("test");
     }
+  });
+});
+
+describe("POST /api/auth/logout", () => {
+  const createTestUser = async () => {
+    await request(app).post("/api/auth/register").send({
+      username: "test",
+      name: "test",
+      password: "test",
+    });
+  };
+
+  afterEach(async () => {
+    await prismaClient.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prismaClient.$disconnect();
+  });
+
+  it("should logout user", async () => {
+    await createTestUser();
+
+    const response = await request(app).post("/api/auth/logout").send();
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Logged out successfully");
+  });
+});
+
+describe("POST /api/auth/refresh", () => {
+  const createTestUser = async () => {
+    await request(app).post("/api/auth/register").send({
+      username: "test",
+      name: "test",
+      password: "test",
+    });
+  };
+
+  afterEach(async () => {
+    await prismaClient.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prismaClient.$disconnect();
+  });
+
+  const agent = request.agent(app);
+  it("reject refresh token when accessToken invalid", async () => {
+    const res = await agent.post("/api/auth/refresh");
+    expect(res.status).toBe(401);
+  });
+
+  it("should login and then refresh token", async () => {
+    await createTestUser();
+
+    await agent
+      .post("/api/auth/login")
+      .send({ username: "test", password: "test" })
+      .expect(200);
+
+    const res = await agent.post("/api/auth/refresh");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("accessToken");
   });
 });

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { AuthService } from "./auth.service.js";
+import { ResponseError } from "../../shared/errors/response.error.js";
 
 export class AuthController {
   constructor(private readonly service: AuthService) {}
@@ -38,6 +39,36 @@ export class AuthController {
     res.status(200).json({
       message: "Login success",
       data,
+      accessToken,
+    });
+  };
+
+  logout = async (_req: Request, res: Response) => {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+
+    res.status(200).json({
+      message: "Logged out successfully",
+    });
+  };
+
+  refresh = async (req: Request, res: Response) => {
+    const refreshToken = req.cookies?.refreshToken;
+    console.log(refreshToken);
+    if (!refreshToken) {
+      throw new ResponseError(401, "Not authorized, refresh token invalid");
+    }
+
+    const { accessToken, user } = await this.service.refreshUserToken(
+      refreshToken
+    );
+
+    res.status(200).json({
+      message: "Refresh token success",
+      data: user,
       accessToken,
     });
   };

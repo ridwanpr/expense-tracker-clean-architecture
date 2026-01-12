@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { ResponseError } from "../errors/response.error.js";
+import { logger } from "../../infra/logger.js";
 
 export const errorMiddleware = async (
   error: Error,
@@ -35,6 +36,7 @@ export const errorMiddleware = async (
       },
     });
   } else {
+    logger.error(error);
     res.status(500).json({
       errors: {
         type: "Internal Server Error",

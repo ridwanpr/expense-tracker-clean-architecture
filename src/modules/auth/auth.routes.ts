@@ -7,5 +7,11 @@ export const authRoutes = Router();
 
 const { controller } = createAuthModule();
 
-authRoutes.post("/auth/register", validate(registerUserSchema), controller.create);
+authRoutes.post(
+  "/auth/register",
+  validate(registerUserSchema),
+  controller.create
+);
 authRoutes.post("/auth/login", validate(loginUserSchema), controller.login);
+authRoutes.post("/auth/logout", controller.logout);
+authRoutes.post("/auth/refresh", controller.refresh);

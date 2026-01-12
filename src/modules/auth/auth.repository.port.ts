@@ -1,9 +1,7 @@
 import type { RegisterUserDTO } from "./auth.schema.js";
 
 export interface AuthRepository {
-  findByUsername(
-    username: string
-  ): Promise<{
+  findByUsername(username: string): Promise<{
     id: number;
     username: string;
     name: string;
@@ -14,4 +12,7 @@ export interface AuthRepository {
     name: string;
     username: string;
   }>;
+  findUserById(
+    id: number
+  ): Promise<{ id: number; name: string; username: string } | null>;
 }
