@@ -20,7 +20,6 @@ export const errorMiddleware = async (
               message: "Request body is required",
             };
           }
-
           return {
             field: issue.path.join(".") || "unknown",
             message: issue.message,
@@ -28,14 +27,38 @@ export const errorMiddleware = async (
         }),
       },
     });
-  } else if (error instanceof ResponseError) {
+  }
+  else if (error instanceof ResponseError) {
     res.status(error.status).json({
       errors: {
         type: "Application Error",
         message: error.message,
       },
     });
-  } else {
+  }
+  else if (
+    error.name === "JWTExpired" ||
+    (error as any).code === "ERR_JWT_EXPIRED"
+  ) {
+    res.status(401).json({
+      errors: {
+        type: "Authentication Error",
+        message: "Token has expired. Please log in again.",
+      },
+    });
+  } else if (
+    error.name === "JsonWebTokenError" ||
+    error.name === "JWSInvalid" ||
+    (error as any).code === "ERR_JWS_INVALID"
+  ) {
+    res.status(401).json({
+      errors: {
+        type: "Authentication Error",
+        message: "Invalid token signature or format.",
+      },
+    });
+  }
+  else {
     logger.error(error);
     res.status(500).json({
       errors: {
