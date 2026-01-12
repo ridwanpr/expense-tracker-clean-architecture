@@ -8,6 +8,7 @@ import type { TokenService } from "../../../shared/services/token.service.js";
 const repo = {
   findByUsername: vi.fn(),
   create: vi.fn(),
+  findUserById: vi.fn(),
 } as unknown as AuthRepository;
 
 const passwordService = {
@@ -18,6 +19,7 @@ const passwordService = {
 const tokenService = {
   generateAccessToken: vi.fn(),
   generateRefreshToken: vi.fn(),
+  verifyJWT: vi.fn(),
 } as unknown as TokenService;
 
 const service = new AuthService(repo, passwordService, tokenService);
@@ -125,7 +127,7 @@ describe("AuthService", () => {
         accessToken: "access-token",
         refreshToken: "refresh-token",
       });
-    }); 
+    });
 
     it("throws error if user is not found", async () => {
       vi.mocked(repo.findByUsername).mockResolvedValue(null);
@@ -145,6 +147,64 @@ describe("AuthService", () => {
       );
 
       expect(tokenService.generateAccessToken).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("refreshUserToken", () => {
+    const refreshToken = "valid-refresh-token";
+    const jwtPayload = { userId: "1" };
+    const mockUser = {
+      id: 1,
+      username: "chihaya",
+      name: "Rindo Chihaya",
+      password: "hashed-password",
+    };
+
+    it("refreshes token successfully", async () => {
+      vi.mocked(tokenService.verifyJWT).mockResolvedValue({
+        payload: jwtPayload,
+      });
+      vi.mocked(repo.findUserById).mockResolvedValue(mockUser);
+      vi.mocked(tokenService.generateAccessToken).mockResolvedValue(
+        "new-access-token"
+      );
+
+      const result = await service.refreshUserToken(refreshToken);
+
+      expect(tokenService.verifyJWT).toHaveBeenCalledWith(refreshToken);
+      expect(repo.findUserById).toHaveBeenCalledWith(1);
+      expect(tokenService.generateAccessToken).toHaveBeenCalledWith({
+        userId: "1",
+      });
+
+      expect(result).toEqual({
+        accessToken: "new-access-token",
+        user: mockUser,
+      });
+    });
+
+    it("throws error if user is not found after token verification", async () => {
+      vi.mocked(tokenService.verifyJWT).mockResolvedValue({
+        payload: jwtPayload,
+      });
+      vi.mocked(repo.findUserById).mockResolvedValue(null);
+
+      await expect(service.refreshUserToken(refreshToken)).rejects.toThrow(
+        new ResponseError(400, "User not Found")
+      );
+
+      expect(tokenService.generateAccessToken).not.toHaveBeenCalled();
+    });
+
+    it("propagates error if token verification fails", async () => {
+      const error = new Error("Token expired");
+      vi.mocked(tokenService.verifyJWT).mockRejectedValue(error);
+
+      await expect(service.refreshUserToken(refreshToken)).rejects.toThrow(
+        error
+      );
+
+      expect(repo.findUserById).not.toHaveBeenCalled();
     });
   });
 });
