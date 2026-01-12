@@ -16,4 +16,8 @@ export class TokenService implements TokenPort {
   async verifyJWT<T = TokenPayload>(token: string): Promise<{ payload: T }> {
     return await jwtVerify(token, JWT_SECRET);
   }
+
+  getJWTSecret(): Uint8Array<ArrayBuffer> {
+    return JWT_SECRET;
+  }
 }
