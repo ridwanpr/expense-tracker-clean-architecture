@@ -6,3 +6,4 @@ node_modules
 dist
 /storage/logs
 .env.test
+.vscode/launch.json

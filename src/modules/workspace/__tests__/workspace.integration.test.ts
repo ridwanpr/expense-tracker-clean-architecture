@@ -5,8 +5,8 @@ import { prismaClient } from "../../../infra/prisma.js";
 
 describe("POST /api/workspace", () => {
   beforeAll(async () => {
-    await prismaClient.user.deleteMany();
     await prismaClient.workspace.deleteMany();
+    await prismaClient.user.deleteMany();
   });
 
   afterEach(async () => {
