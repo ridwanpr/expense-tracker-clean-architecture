@@ -16,4 +16,10 @@ export class WorkspaceService {
       data: newWorkspace,
     };
   }
+
+  async findWorkspaceById(workspaceId: number, userId: number) {
+    const workspace = await this.repo.findWorkspaceById(workspaceId, userId);
+
+    return workspace;
+  }
 }

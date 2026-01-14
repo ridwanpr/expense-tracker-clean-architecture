@@ -1,27 +1,25 @@
+import { ResponseError } from "../../shared/errors/response.error.js";
+import type { WorkspaceService } from "../workspace/workspace.service.js";
 import type { PrismaCategoryRepository } from "./category.repository.prisma.js";
 import type { CreateCategoryDTO } from "./category.schema.js";
 
 export class CategoryService {
-  constructor(private readonly repo: PrismaCategoryRepository) {}
+  constructor(
+    private readonly categoryrepo: PrismaCategoryRepository,
+    private readonly workspaceService: WorkspaceService
+  ) {}
 
   async getCategories(workspaceId: number) {
-    const workspaceIdNumber = Number(workspaceId);
-
-    if (isNaN(workspaceIdNumber)) {
-      throw new Error("Workspace id not valid");
-    }
-
-    return this.repo.getCategories(workspaceIdNumber);
+    return this.categoryrepo.getCategories(workspaceId);
   }
 
   async createCategory(workspaceId: number, userId: number, data: CreateCategoryDTO) {
-    const userIdNum = Number(userId);
-    const workspaceIdNum = Number(workspaceId);
+    const isWorkspaceValid = await this.workspaceService.findWorkspaceById(workspaceId, userId);
 
-    if (isNaN(workspaceIdNum) || isNaN(userIdNum)) {
-      throw new Error("Workspace or user id not valid");
+    if (!isWorkspaceValid) {
+      throw new ResponseError(400, "Workspace not found");
     }
 
-    return this.repo.createCategory(userIdNum, workspaceIdNum, data);
+    return this.categoryrepo.createCategory(userId, workspaceId, data);
   }
 }

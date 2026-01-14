@@ -24,7 +24,7 @@ export function createContainer() {
   //   Services
   const authService = new AuthService(authRepo, passwordService, tokenService);
   const workspaceService = new WorkspaceService(workspaceRepo);
-  const categoryService = new CategoryService(categoryRepo);
+  const categoryService = new CategoryService(categoryRepo, workspaceService);
 
   //   Controller
   const authController = new AuthController(authService);

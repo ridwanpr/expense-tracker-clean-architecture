@@ -1,12 +1,14 @@
-import type { User } from "../../generated/prisma/client.js";
 import type { CreateWorkspaceDTO } from "./workspace.schema.js";
 
 export interface WorkspaceRepository {
-  findWorkspaceById(workspaceId: number): Promise<{
+  findWorkspaceById(
+    workspaceId: number,
+    ownerId: number
+  ): Promise<{
     id: number;
     name: string;
     description: string;
-    owner: User;
+    ownerId: number;
   } | null>;
 
   createWorkspace(

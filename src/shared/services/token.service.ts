@@ -6,7 +6,7 @@ import type { TokenPayload } from "../types/auth.type.js";
 
 export class TokenService implements TokenPort {
   async generateAccessToken(payload: JWTPayload): Promise<string> {
-    return generateToken(payload, "15m");
+    return generateToken(payload, "30m");
   }
 
   async generateRefreshToken(payload: JWTPayload): Promise<string> {

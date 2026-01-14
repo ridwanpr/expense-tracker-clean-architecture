@@ -17,5 +17,7 @@ export function createWorkspaceRoutes(controller: WorkspaceController, tokenServ
     controller.createWorkspace
   );
 
+  router.get("/workspace/:workspaceId", protectedAuth, controller.findWorkspace);
+
   return router;
 }
