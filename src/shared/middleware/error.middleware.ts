@@ -27,19 +27,14 @@ export const errorMiddleware = async (
         }),
       },
     });
-  }
-  else if (error instanceof ResponseError) {
+  } else if (error instanceof ResponseError) {
     res.status(error.status).json({
       errors: {
         type: "Application Error",
         message: error.message,
       },
     });
-  }
-  else if (
-    error.name === "JWTExpired" ||
-    (error as any).code === "ERR_JWT_EXPIRED"
-  ) {
+  } else if (error.name === "JWTExpired" || (error as any).code === "ERR_JWT_EXPIRED") {
     res.status(401).json({
       errors: {
         type: "Authentication Error",
@@ -57,9 +52,8 @@ export const errorMiddleware = async (
         message: "Invalid token signature or format.",
       },
     });
-  }
-  else {
-    logger.error(error);
+  } else {
+    logger.error(error.message, { stack: error.stack });
     res.status(500).json({
       errors: {
         type: "Internal Server Error",

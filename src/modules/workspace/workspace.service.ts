@@ -7,7 +7,7 @@ export class WorkspaceService {
 
   async createWorkSpace(userId: number, data: CreateWorkspaceDTO) {
     const id = Number(userId);
-    if (typeof id !== "number") {
+    if (isNaN(id)) {
       throw new ResponseError(400, "Payload user id token not valid");
     }
 

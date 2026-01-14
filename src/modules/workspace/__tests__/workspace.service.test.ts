@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WorkspaceRepository } from "../workspace.repository.port";
 import { WorkspaceService } from "../workspace.service";
+import { ResponseError } from "../../../shared/errors/response.error";
 
 const workspacerepo = {
   findWorkspaceById: vi.fn(),
@@ -35,8 +36,17 @@ describe("WorkspaceService", () => {
     });
   });
 
-  // it("should throw error if user id is invalid", async() => {
-  //   const userId = "Not a number";
-    
-  // })
+  it("should throw error if user id is invalid", async () => {
+    const invalidUserId = "invalid_id" as unknown as number;
+    const requestBody = {
+      name: "Workspace Test",
+      description: "Workspace Test description",
+    };
+
+    await expect(workspaceService.createWorkSpace(invalidUserId, requestBody)).rejects.toThrow(
+      ResponseError
+    );
+
+    expect(workspacerepo.createWorkspace).not.toHaveBeenCalled();
+  });
 });

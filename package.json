@@ -8,11 +8,10 @@
     "debug": "tsx --inspect src/server.ts",
     "start": "node dist/main.js",
     "build": "rimraf dist && tsc",
-    "test": "vitest --no-file-parallelism",
-    "test:unit": "vitest service",
+    "test": "dotenv -e .env.test -- vitest --no-file-parallelism",
+    "test:unit": "dotenv -e .env.test -- vitest service",
     "db:test:push": "dotenv -e .env.test -- prisma db push --accept-data-loss",
-    "test:e2e": "pnpm run db:test:push && dotenv -e .env.test -- vitest integration",
-    "test:watch": "vitest --watch"
+    "test:e2e": "pnpm run db:test:push && dotenv -e .env.test -- vitest integration"
   },
   "keywords": [],
   "author": "",
