@@ -7,10 +7,10 @@ export interface CategoryRepository {
       description: string | null;
     } | null>
   >;
-  findCategoryById(id: number): Promise<{
+  findCategoryById(categoryId: number): Promise<{
     name: string;
     description: string | null;
-  }>;
+  } | null>;
   createCategory(
     userId: number,
     workspaceId: number,

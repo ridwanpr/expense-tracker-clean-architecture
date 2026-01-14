@@ -17,8 +17,19 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  async findCategoryById(id: number): Promise<any> {
-    throw new Error("Method not implemented.");
+  async findCategoryById(categoryId: number) {
+    return await this.prismaClient.category.findFirst({
+      where: {
+        id: categoryId,
+      },
+      omit: {
+        id: true,
+        workspaceId: true,
+      },
+      include: {
+        createdBy: true,
+      },
+    });
   }
 
   async createCategory(userId: number, workspaceId: number, data: CreateCategoryDTO) {

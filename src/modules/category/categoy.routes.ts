@@ -17,6 +17,7 @@ export function createCategoryRoutes(controller: CategoryController, tokenServic
     validate(createCategorySchema),
     controller.createCategory
   );
+  router.get("/category/:workspaceId/:categoryId", protectedAuth, controller.showCategory);
 
   return router;
 }

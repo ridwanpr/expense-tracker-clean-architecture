@@ -13,7 +13,7 @@ export class CategoryService {
     const isWorkspaceValid = await this.workspaceAccess.findWorkspaceById(workspaceId, userId);
 
     if (!isWorkspaceValid) {
-      throw new ResponseError(400, "Workspace not found");
+      throw new ResponseError(404, "Workspace not found");
     }
 
     return this.categoryRepo.getCategories(workspaceId);
@@ -23,9 +23,25 @@ export class CategoryService {
     const workspace = await this.workspaceAccess.findWorkspaceById(workspaceId, userId);
 
     if (!workspace) {
-      throw new ResponseError(400, "Workspace not found");
+      throw new ResponseError(404, "Workspace not found");
     }
 
     return this.categoryRepo.createCategory(userId, workspaceId, data);
+  }
+
+  async findCategoryFirstById(workspaceId: number, categoryId: number, userId: number) {
+    const workspace = await this.workspaceAccess.findWorkspaceById(workspaceId, userId);
+
+    if (!workspace) {
+      throw new ResponseError(404, "Workspace not found");
+    }
+
+    const category = await this.categoryRepo.findCategoryById(categoryId);
+
+    if (!category) {
+      throw new ResponseError(404, "Category not found");
+    }
+
+    return category;
   }
 }
