@@ -9,7 +9,13 @@ export class CategoryService {
     private readonly workspaceService: WorkspaceService
   ) {}
 
-  async getCategories(workspaceId: number) {
+  async getCategories(workspaceId: number, userId: number) {
+    const isWorkspaceValid = await this.workspaceService.findWorkspaceById(workspaceId, userId);
+
+    if (!isWorkspaceValid) {
+      throw new ResponseError(400, "Workspace not found");
+    }
+
     return this.categoryrepo.getCategories(workspaceId);
   }
 

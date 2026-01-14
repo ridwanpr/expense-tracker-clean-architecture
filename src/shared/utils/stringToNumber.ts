@@ -4,12 +4,13 @@ export const stringToNumber = (
   value: string | undefined,
   statusCode: number,
   errorMessage: string
-) => {
-  const result = Number(value);
-
-  if (NaN) {
+): number => {
+  if (!value || value.trim() === "") {
     throw new ResponseError(statusCode, errorMessage);
   }
-
+  const result = Number(value);
+  if (isNaN(result)) {
+    throw new ResponseError(statusCode, errorMessage);
+  }
   return result;
 };
