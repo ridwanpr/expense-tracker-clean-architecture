@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { PermissionRepository } from "../permission.repository.port";
-import { PermissionService } from "../permission.service";
+import type { PermissionRepository } from "../permission.repository.port.js";
+import { PermissionService } from "../permission.service.js";
 
 const permissionRepo = {
   getAllPermissions: vi.fn(),

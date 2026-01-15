@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AuthService } from "../auth.service.js";
 import { ResponseError } from "../../../shared/errors/response.error.js";
 import type { AuthRepository } from "../auth.repository.port.js";

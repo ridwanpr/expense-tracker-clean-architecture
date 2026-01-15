@@ -1,4 +1,3 @@
-import { describe, it, expect, afterEach, afterAll, beforeAll } from "vitest";
 import request from "supertest";
 import app from "../../../app.js";
 import { prismaClient } from "../../../infra/prisma.js";

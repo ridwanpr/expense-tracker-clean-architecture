@@ -1,7 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { WorkspaceRepository } from "../workspace.repository.port";
-import { WorkspaceService } from "../workspace.service";
-import { ResponseError } from "../../../shared/errors/response.error";
+import type { WorkspaceRepository } from "../workspace.repository.port.js";
+import { WorkspaceService } from "../workspace.service.js";
+import { ResponseError } from "../../../shared/errors/response.error.js";
 
 const workspacerepo = {
   findWorkspaceById: vi.fn(),
