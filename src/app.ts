@@ -7,6 +7,7 @@ import { createAuthRoutes } from "./modules/auth/auth.routes.js";
 import { createWorkspaceRoutes } from "./modules/workspace/workspace.routes.js";
 import { createCategoryRoutes } from "./modules/category/categoy.routes.js";
 import { createPermissionRoute } from "./modules/permission/permission.routes.js";
+import { createRoleRoutes } from "./modules/role/role.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -28,11 +29,13 @@ const permissionRouter = createPermissionRoute(
   container.permissionController,
   container.tokenService
 );
+const roleRouter = createRoleRoutes(container.roleController, container.tokenService);
 
 app.use("/api", authRouter);
 app.use("/api", workspaceRouter);
 app.use("/api", categoryRouter);
 app.use("/api", permissionRouter);
+app.use("/api", roleRouter);
 
 app.use((_req, res, _next) => {
   res.status(404).json({

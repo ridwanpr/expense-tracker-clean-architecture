@@ -112,9 +112,12 @@ describe("POST /api/category/:workspaceId", () => {
 
     const workspaceId = 111;
 
-    const response = await request(app).post(`/api/category/${workspaceId}`).send();
+    const response = await request(app)
+      .post(`/api/category/${workspaceId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send();
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
     expect(response.body.errors).toBeDefined();
   });
 });

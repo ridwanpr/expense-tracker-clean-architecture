@@ -13,6 +13,9 @@ import { CategoryController } from "./modules/category/category.controller.js";
 import { PrismaPermissionRepository } from "./modules/permission/permission.repository.prisma.js";
 import { PermissionService } from "./modules/permission/permission.service.js";
 import { PermissionController } from "./modules/permission/permission.controller.js";
+import { PrismaRoleRepository } from "./modules/role/role.repository.prisma.js";
+import { RoleService } from "./modules/role/role.service.js";
+import { RoleController } from "./modules/role/role.controller.js";
 
 export function createContainer() {
   // Shared Dependencies
@@ -24,18 +27,21 @@ export function createContainer() {
   const workspaceRepo = new PrismaWorkspaceRepository(prismaClient);
   const categoryRepo = new PrismaCategoryRepository(prismaClient);
   const permissionRepo = new PrismaPermissionRepository(prismaClient);
+  const roleRepo = new PrismaRoleRepository(prismaClient);
 
   //   Services
   const authService = new AuthService(authRepo, passwordService, tokenService);
   const workspaceService = new WorkspaceService(workspaceRepo);
   const categoryService = new CategoryService(categoryRepo, workspaceService);
   const permissionService = new PermissionService(permissionRepo);
+  const roleService = new RoleService(roleRepo);
 
   //   Controller
   const authController = new AuthController(authService);
   const workspaceController = new WorkspaceController(workspaceService);
   const categoryController = new CategoryController(categoryService);
   const permissionController = new PermissionController(permissionService);
+  const roleController = new RoleController(roleService);
 
   return {
     tokenService,
@@ -43,5 +49,6 @@ export function createContainer() {
     workspaceController,
     categoryController,
     permissionController,
+    roleController,
   };
 }

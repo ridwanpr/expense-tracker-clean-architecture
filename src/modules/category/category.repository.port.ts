@@ -7,10 +7,12 @@ export interface CategoryRepository {
       description: string | null;
     } | null>
   >;
+
   findCategoryById(categoryId: number): Promise<{
     name: string;
     description: string | null;
   } | null>;
+
   createCategory(
     userId: number,
     workspaceId: number,
@@ -19,9 +21,11 @@ export interface CategoryRepository {
     name: string;
     description: string | null;
   }>;
+
   updateCategory(
     categoryId: number,
     data: UpdateCategoryDTO
   ): Promise<{ name: string; description: string | null }>;
+
   deleteCategory(id: number): Promise<any>;
 }
