@@ -95,6 +95,7 @@ model Role {
   rolePermissions  RolePermission[]
   workspaceMembers WorkspaceMember[]
 
+  @@unique([workspaceId, name])
   @@map("roles")
 }
 
