@@ -8,7 +8,7 @@ export const createCategorySchema = z.object({
 export type CreateCategoryDTO = z.infer<typeof createCategorySchema>;
 
 export const updateCategorySchema = z.object({
-  name: z.string().min(3).max(50),
+  name: z.string().min(3).max(50).optional(),
   description: z.string().max(250).optional(),
 });
 

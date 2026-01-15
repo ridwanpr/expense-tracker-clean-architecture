@@ -63,4 +63,28 @@ export class CategoryController {
       data: category,
     });
   };
+
+  updateCategory = async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      throw new ResponseError(401, "User token unauthorized, please re-login");
+    }
+
+    const userIdNum = stringToNumber(userId, 400, "User id not valid");
+    const workspaceId = stringToNumber(req.params.workspaceId, 400, "Workspace id invalid");
+    const categoryId = stringToNumber(req.params.categoryId, 400, "Category id invalid");
+
+    const category = await this.service.updateCategory(
+      workspaceId,
+      categoryId,
+      userIdNum,
+      req.body
+    );
+
+    res.status(200).json({
+      message: "Update category success",
+      data: category,
+    });
+  };
 }

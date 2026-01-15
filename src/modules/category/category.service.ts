@@ -1,7 +1,7 @@
 import { ResponseError } from "../../shared/errors/response.error.js";
 import type { WorkspaceAccess } from "../workspace/workspace.access.port.js";
 import type { CategoryRepository } from "./category.repository.port.js";
-import type { CreateCategoryDTO } from "./category.schema.js";
+import type { CreateCategoryDTO, UpdateCategoryDTO } from "./category.schema.js";
 
 export class CategoryService {
   constructor(
@@ -43,5 +43,26 @@ export class CategoryService {
     }
 
     return category;
+  }
+
+  async updateCategory(
+    workspaceId: number,
+    categoryId: number,
+    userId: number,
+    data: UpdateCategoryDTO
+  ) {
+    const workspace = await this.workspaceAccess.findWorkspaceById(workspaceId, userId);
+
+    if (!workspace) {
+      throw new ResponseError(404, "Workspace not found");
+    }
+
+    const category = await this.categoryRepo.findCategoryById(categoryId);
+
+    if (!category) {
+      throw new ResponseError(404, "Category not found");
+    }
+
+    return await this.categoryRepo.updateCategory(categoryId, data);
   }
 }

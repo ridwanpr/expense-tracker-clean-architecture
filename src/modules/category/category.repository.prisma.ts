@@ -1,6 +1,6 @@
 import { PrismaClient } from "../../generated/prisma/client.js";
 import type { CategoryRepository } from "./category.repository.port.js";
-import type { CreateCategoryDTO } from "./category.schema.js";
+import type { CreateCategoryDTO, UpdateCategoryDTO } from "./category.schema.js";
 
 export class PrismaCategoryRepository implements CategoryRepository {
   constructor(private readonly prismaClient: PrismaClient) {}
@@ -49,8 +49,19 @@ export class PrismaCategoryRepository implements CategoryRepository {
     };
   }
 
-  async updateCategory(id: number, data: any) {
-    throw new Error("Method not implemented.");
+  async updateCategory(categoryId: number, data: UpdateCategoryDTO) {
+    const category = await this.prismaClient.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        name: data.name,
+        description: data.description,
+      },
+      select: { name: true, description: true },
+    });
+
+    return category;
   }
 
   async deleteCategory(id: number) {

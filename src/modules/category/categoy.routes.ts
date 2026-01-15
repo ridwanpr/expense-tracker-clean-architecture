@@ -3,7 +3,7 @@ import { authMiddleware } from "../../shared/middleware/auth.middleware.js";
 import type { CategoryController } from "./category.controller.js";
 import type { TokenService } from "../../shared/services/token.service.js";
 import { validate } from "../../shared/middleware/validate.middleware.js";
-import { createCategorySchema } from "./category.schema.js";
+import { createCategorySchema, updateCategorySchema } from "./category.schema.js";
 
 export function createCategoryRoutes(controller: CategoryController, tokenService: TokenService) {
   const router = Router();
@@ -18,6 +18,12 @@ export function createCategoryRoutes(controller: CategoryController, tokenServic
     controller.createCategory
   );
   router.get("/category/:workspaceId/:categoryId", protectedAuth, controller.showCategory);
+  router.patch(
+    "/category/:workspaceId/:categoryId",
+    protectedAuth,
+    validate(updateCategorySchema),
+    controller.updateCategory
+  );
 
   return router;
 }

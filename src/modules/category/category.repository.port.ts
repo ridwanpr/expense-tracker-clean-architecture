@@ -1,4 +1,4 @@
-import type { CreateCategoryDTO } from "./category.schema.js";
+import type { CreateCategoryDTO, UpdateCategoryDTO } from "./category.schema.js";
 
 export interface CategoryRepository {
   getCategories(workspaceId: number): Promise<
@@ -19,6 +19,9 @@ export interface CategoryRepository {
     name: string;
     description: string | null;
   }>;
-  updateCategory(id: number, data: any): Promise<any>;
+  updateCategory(
+    categoryId: number,
+    data: UpdateCategoryDTO
+  ): Promise<{ name: string; description: string | null }>;
   deleteCategory(id: number): Promise<any>;
 }
