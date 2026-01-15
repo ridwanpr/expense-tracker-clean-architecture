@@ -14,4 +14,18 @@ export interface RoleRepository {
       slug: string;
     }>;
   }>;
+
+  findRoleNameByWorkspaceId(
+    name: string,
+    workspaceId: number
+  ): Promise<{
+    id: number;
+    name: string;
+    description: string | null;
+    workspaceId: number;
+    rolePermissions: Array<{
+      permissionId: number;
+      slug: string;
+    }>;
+  } | null>;
 }

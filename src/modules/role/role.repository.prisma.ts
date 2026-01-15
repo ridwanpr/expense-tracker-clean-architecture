@@ -60,4 +60,56 @@ export class PrismaRoleRepository implements RoleRepository {
       })),
     };
   }
+
+  async findRoleNameByWorkspaceId(
+    name: string,
+    workspaceId: number
+  ): Promise<{
+    id: number;
+    name: string;
+    description: string | null;
+    workspaceId: number;
+    rolePermissions: Array<{
+      permissionId: number;
+      slug: string;
+    }>;
+  } | null> {
+    const role = await this.prismaClient.role.findFirst({
+      where: {
+        workspaceId: workspaceId,
+        name: name,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        workspaceId: true,
+        rolePermissions: {
+          select: {
+            permissionId: true,
+            permission: {
+              select: {
+                slug: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!role) {
+      return null;
+    }
+
+    return {
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      workspaceId: role.workspaceId,
+      rolePermissions: role.rolePermissions.map((rp) => ({
+        permissionId: rp.permissionId,
+        slug: rp.permission.slug,
+      })),
+    };
+  }
 }
