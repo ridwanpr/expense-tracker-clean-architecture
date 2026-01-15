@@ -17,5 +17,7 @@ export const createRoleRoutes = (controller: RoleController, tokenService: Token
     controller.createRolePermission
   );
 
+  router.get("/role/:workspaceId/:roleName", protectedAuth, controller.showRolePermission);
+
   return router;
 };

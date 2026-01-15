@@ -16,4 +16,16 @@ export class RoleController {
       data: roles,
     });
   };
+
+  showRolePermission = async (req: AuthenticatedRequest, res: Response) => {
+    const workspaceId = stringToNumber(req.params.workspaceId, 400, "Invalid workspace id");
+    const roleName = req.params.roleName as string;
+
+    const role = await this.roleService.findRoleNameByWorkspaceId(workspaceId, roleName);
+
+    res.status(200).json({
+      message: "Fetch role detail success",
+      data: role,
+    });
+  };
 }

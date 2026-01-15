@@ -16,4 +16,14 @@ export class RoleService {
 
     return rolePermission;
   }
+
+  async findRoleNameByWorkspaceId(workspaceId: number, name: string) {
+    const role = await this.roleRepo.findRoleNameByWorkspaceId(name, workspaceId);
+
+    if (role === null) {
+      throw new ResponseError(404, "Role not found");
+    }
+
+    return role;
+  }
 }
