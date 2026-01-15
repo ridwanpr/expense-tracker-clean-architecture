@@ -6,6 +6,7 @@ import { createContainer } from "./container.js";
 import { createAuthRoutes } from "./modules/auth/auth.routes.js";
 import { createWorkspaceRoutes } from "./modules/workspace/workspace.routes.js";
 import { createCategoryRoutes } from "./modules/category/categoy.routes.js";
+import { createPermissionRoute } from "./modules/permission/permission.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -23,10 +24,15 @@ const workspaceRouter = createWorkspaceRoutes(
   container.tokenService
 );
 const categoryRouter = createCategoryRoutes(container.categoryController, container.tokenService);
+const permissionRouter = createPermissionRoute(
+  container.permissionController,
+  container.tokenService
+);
 
 app.use("/api", authRouter);
 app.use("/api", workspaceRouter);
 app.use("/api", categoryRouter);
+app.use("/api", permissionRouter);
 
 app.use((_req, res, _next) => {
   res.status(404).json({
