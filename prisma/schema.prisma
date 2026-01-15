@@ -129,6 +129,7 @@ model WorkspaceMember {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   role      Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
 
+  @@unique([workspaceId, userId])
   @@map("workspace_members")
 }
 
