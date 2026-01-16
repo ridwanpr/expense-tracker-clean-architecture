@@ -1,9 +1,11 @@
+import { ResponseError } from "../../../shared/errors/response.error.js";
 import type { PermissionRepository } from "../permission.repository.port.js";
 import { PermissionService } from "../permission.service.js";
 
 const permissionRepo = {
   getAllPermissions: vi.fn(),
   checkPermissionExistBySlug: vi.fn(),
+  getPermissionByIds: vi.fn(),
 } as unknown as PermissionRepository;
 
 const permissionService = new PermissionService(permissionRepo);
@@ -51,5 +53,19 @@ describe("Permission Service Test", () => {
 
     expect(permissionRepo.checkPermissionExistBySlug).toHaveBeenCalledWith(slug);
     expect(result).toEqual(false);
+  });
+
+  it("should throw 404 if permission id not found", async () => {
+    const getPermissionByIdsValue = [
+      {
+        id: 1,
+        slug: "slug",
+        description: "Desc",
+      },
+    ];
+
+    vi.mocked(permissionRepo.getPermissionByIds).mockResolvedValue(getPermissionByIdsValue);
+    await expect(permissionService.getPermissionsOrFail([3, 4])).rejects.toThrow(ResponseError);
+    expect(permissionRepo.getPermissionByIds).toHaveBeenCalledWith([3, 4]);
   });
 });

@@ -34,7 +34,7 @@ export function createContainer() {
   const workspaceService = new WorkspaceService(workspaceRepo);
   const categoryService = new CategoryService(categoryRepo, workspaceService);
   const permissionService = new PermissionService(permissionRepo);
-  const roleService = new RoleService(roleRepo);
+  const roleService = new RoleService(roleRepo, permissionService);
 
   //   Controller
   const authController = new AuthController(authService);

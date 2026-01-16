@@ -23,4 +23,14 @@ export class PrismaPermissionRepository implements PermissionRepository {
       select: { id: true, slug: true, description: true },
     });
   }
+
+  async getPermissionByIds(ids: number[]): Promise<Permission[]> {
+    return await this.prismaClient.permission.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+  }
 }
